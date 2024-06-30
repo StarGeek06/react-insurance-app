@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import 'react-dom'
-import './InsuranceForm.css'
-import backImage from './assets/images/back.png'
-import nextImage from './assets/images/next.png'
+import './InsuranceForm.css';
+import backImage from './assets/images/back.png';
+import nextImage from './assets/images/next.png';
 
 const StepOne = ({ formData, handleChange, nextStep }) => (
   <div>
     <h2>1/5: Age</h2>
     <label>
-      
       <input
         type="number"
         name="age"
@@ -18,7 +16,7 @@ const StepOne = ({ formData, handleChange, nextStep }) => (
       />
     </label>
     <br />
-    <button onClick={nextStep} className='next'><img src={nextImage} alt="" /></button>
+    <button onClick={nextStep} className='next'><img src={nextImage} alt="Next" /></button>
   </div>
 );
 
@@ -26,7 +24,6 @@ const StepTwo = ({ formData, handleChange, nextStep, prevStep }) => (
   <div>
     <h2>2/5: BMI</h2>
     <label>
-      
       <input
         type="number"
         name="bmi"
@@ -35,8 +32,8 @@ const StepTwo = ({ formData, handleChange, nextStep, prevStep }) => (
       />
     </label>
     <br />
-    <button onClick={prevStep}><img src={backImage} alt="retour" /></button>
-    <button onClick={nextStep} className='nexti'><img src={nextImage} alt="" /></button>
+    <button onClick={prevStep}><img src={backImage} alt="Back" /></button>
+    <button onClick={nextStep} className='nexti'><img src={nextImage} alt="Next" /></button>
   </div>
 );
 
@@ -44,7 +41,6 @@ const StepThree = ({ formData, handleChange, nextStep, prevStep }) => (
   <div>
     <h2>3/5: Children</h2>
     <label>
-    
       <input
         type="number"
         name="children"
@@ -53,8 +49,8 @@ const StepThree = ({ formData, handleChange, nextStep, prevStep }) => (
       />
     </label>
     <br />
-    <button onClick={prevStep}><img src={backImage} alt="retour" /></button>
-    <button onClick={nextStep}className='nexti'><img src={nextImage} alt="" /></button>
+    <button onClick={prevStep}><img src={backImage} alt="Back" /></button>
+    <button onClick={nextStep} className='nexti'><img src={nextImage} alt="Next" /></button>
   </div>
 );
 
@@ -62,7 +58,6 @@ const StepFour = ({ formData, handleChange, nextStep, prevStep }) => (
   <div>
     <h2>4/5: Smoker</h2>
     <label>
-      
       <select
         name="smoker"
         value={formData.smoker}
@@ -74,8 +69,8 @@ const StepFour = ({ formData, handleChange, nextStep, prevStep }) => (
       </select>
     </label>
     <br />
-    <button onClick={prevStep}><img src={backImage} alt="retour" /></button>
-    <button onClick={nextStep} className='nexti'><img src={nextImage} alt="" /></button>
+    <button onClick={prevStep}><img src={backImage} alt="Back" /></button>
+    <button onClick={nextStep} className='nexti'><img src={nextImage} alt="Next" /></button>
   </div>
 );
 
@@ -83,7 +78,6 @@ const StepFive = ({ formData, handleChange, handleSubmit, prevStep }) => (
   <div>
     <h2>5/5: Region</h2>
     <label>
-      
       <select
         name="region"
         value={formData.region}
@@ -97,20 +91,31 @@ const StepFive = ({ formData, handleChange, handleSubmit, prevStep }) => (
       </select>
     </label>
     <br />
-    <button onClick={prevStep}><img src={backImage} alt="retour" /></button>
+    <button onClick={prevStep}><img src={backImage} alt="Back" /></button>
     <button onClick={handleSubmit} className='nexti'>Go</button>
   </div>
 );
 
 const Result = ({ charge, resetForm }) => (
   <div>
-
     <div className="result">
-      <h2>Primes approximatives..:</h2>
+      <h2>Primes approximatives :</h2>
       <h3>{charge}</h3>
       <button onClick={resetForm}>Reprendre</button>
     </div>
+  </div>
+);
+
+const HelpContent = () => (
+  <div className="help-content">
     
+    <ul>
+      <li><strong>Age</strong> : L'âge de la personne assurée.</li>
+      <li><strong>BMI</strong> : L'indice de masse corporelle (Body Mass Index) de la personne.</li>
+      <li><strong>Children</strong> : Le nombre d'enfants couverts par l'assurance.</li>
+      <li><strong>Smoker?</strong> : Indique si la personne fume ou non.</li>
+      <li><strong>Region</strong> : La région géographique de résidence de la personne.</li>
+    </ul>
   </div>
 );
 
@@ -125,6 +130,7 @@ const InsuranceForm = () => {
   const [step, setStep] = useState(1);
   const [charge, setCharge] = useState(null);
   const [error, setError] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
@@ -142,7 +148,7 @@ const InsuranceForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInputs()) {
-      setError('Please enter valid inputs.');
+      setError('Veuillez saisir des entrées valides.');
       return;
     }
     try {
@@ -155,8 +161,8 @@ const InsuranceForm = () => {
       setError(null);
       setStep(step + 1); 
     } catch (error) {
-      console.error('Error during prediction:', error);
-      setError('Error during prediction. Please try again.');
+      console.error('Erreur lors de la prédiction :', error);
+      setError('Erreur lors de la prédiction. Veuillez réessayer.');
     }
   };
 
@@ -173,24 +179,40 @@ const InsuranceForm = () => {
     setError(null);
   };
 
-  
+  const toggleHelp = () => {
+    setShowHelp(!showHelp);
+    // Reset form state when hiding help
+    if (!showHelp) {
+      setFormData({
+        age: '',
+        bmi: '',
+        children: '',
+        smoker: '',
+        region: ''
+      });
+      setStep(1);
+      setCharge(null);
+      setError(null);
+    }
+  };
 
-  switch (step) {
-    case 1:
-      return <StepOne formData={formData} handleChange={handleChange} nextStep={nextStep} />;
-    case 2:
-      return <StepTwo formData={formData} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />;
-    case 3:
-      return <StepThree formData={formData} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />;
-    case 4:
-      return <StepFour formData={formData} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />;
-    case 5:
-      return <StepFive formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} prevStep={prevStep} />;
-    case 6:
-      return <Result charge={charge} resetForm={resetForm} />;
-    default:
-      return null;
-  }
+  return (
+    <div className="insurance-form">
+      <button onClick={toggleHelp} className="help-button">Aide</button>
+      {showHelp && <HelpContent />}
+      {!showHelp && (
+        <>
+          {step === 1 && <StepOne formData={formData} handleChange={handleChange} nextStep={nextStep} />}
+          {step === 2 && <StepTwo formData={formData} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />}
+          {step === 3 && <StepThree formData={formData} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />}
+          {step === 4 && <StepFour formData={formData} handleChange={handleChange} nextStep={nextStep} prevStep={prevStep} />}
+          {step === 5 && <StepFive formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} prevStep={prevStep} />}
+          {step === 6 && <Result charge={charge} resetForm={resetForm} />}
+          {error && <p className="error-message">{error}</p>}
+        </>
+      )}
+    </div>
+  );
 };
 
 export default InsuranceForm;
