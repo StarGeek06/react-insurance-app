@@ -3,3 +3,7 @@ uvicorn
 joblib
 numpy
 pydantic
+sklearn
+xgboost
+seaborn
+matplotlib
