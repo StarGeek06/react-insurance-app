@@ -1,0 +1,29 @@
+body 
+{
+  overflow-x: hidden;
+   overflow-y: hidden;
+   background-image: url('./assets/images/bg.png');
+   background-size: cover;
+}
+.box
+{
+   background-color: blueviolet;
+   height: 300px;
+   width: 350px;
+   border-radius: 30px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   color: black;
+   
+}
+
+.help p 
+{
+  height: 200px;
+  width: 500px;
+  background-color: blueviolet;
+  border-radius: 30px;
+  text-align: center;
+  align-items: center;
+}
