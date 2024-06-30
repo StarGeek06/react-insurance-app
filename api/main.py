@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
 import numpy as np
@@ -9,7 +9,6 @@ import os
 model = joblib.load('random_forest_insurance.pkl')
 
 app = FastAPI()
-
 
 origins = [
     "http://localhost:3000",
@@ -34,12 +33,14 @@ class InputData(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message":"Hello"}
+    return {"message": "Hello"}
 
 @app.post("/predict")
-def predict(data: InputData):
+def predict(data: InputData, response: Response):
     input_data = np.array([[data.age, data.bmi, data.children, data.smoker, data.region]])
     prediction = model.predict(input_data)
+    response.headers["cache-control"] = "no-cache"
+    response.headers["x-content-type-options"] = "nosniff"
     return {'charge': prediction[0]}
 
 if __name__ == '__main__':
