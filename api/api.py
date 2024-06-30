@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import joblib
 import numpy as np
 from pydantic import BaseModel
+import os 
 
 # Charger le modèle
 model = joblib.load('random_forest_insurance.pkl')
@@ -12,7 +13,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173"
+    "http://127.0.0.1:5173",
+    "https://react-insurance-app.onrender.com/"
 ]
 
 app.add_middleware(
@@ -42,4 +44,5 @@ def predict(data: InputData):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='127.0.0.1', port=8000)
+    port = int(os.environ.get('PORT', 8000))
+    uvicorn.run(app, host='0.0.0.0', port=port)
