@@ -13,14 +13,14 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://react-insurance-app.onrender.com/"
+    "https://react-insurance-app.onrender.com"
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["POST"],
     allow_headers=["*"],
 )
 
@@ -39,7 +39,9 @@ def home():
 def predict(data: InputData, response: Response):
     input_data = np.array([[data.age, data.bmi, data.children, data.smoker, data.region]])
     prediction = model.predict(input_data)
-    response.headers["cache-control"] = "no-cache"
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
     response.headers["x-content-type-options"] = "nosniff"
     return {'charge': prediction[0]}
 
