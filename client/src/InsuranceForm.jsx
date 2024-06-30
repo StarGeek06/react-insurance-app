@@ -146,7 +146,7 @@ const InsuranceForm = () => {
       return;
     }
     try {
-      const response = await axios.post('http://127.0.0.1:8000/predict', formData, {
+      const response = await axios.post('https://api-insurance-app.onrender.com/predict', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
