@@ -39,7 +39,7 @@ def home():
 def predict(data: InputData, response: Response):
     input_data = np.array([[data.age, data.bmi, data.children, data.smoker, data.region]])
     prediction = model.predict(input_data)
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Cache-Control"] = "no-cache, max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     response.headers["x-content-type-options"] = "nosniff"
